@@ -6,7 +6,7 @@ from urllib.request import urlopen
 
 connection = pymysql.connect(host='localhost',
                              user='root',
-                             password='chainkiller',
+                             password='',
                              db='lora',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
