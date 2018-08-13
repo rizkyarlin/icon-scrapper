@@ -6,8 +6,8 @@ from urllib.request import urlopen
 
 connection = pymysql.connect(host='localhost',
                              user='root',
-                             password='chainkiller',
-                             db='lora',
+                             password='',
+                             db='icons',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
@@ -17,12 +17,16 @@ html = urlopen("https://themify.me/themify-icons")
 
 soup = BeautifulSoup(html, features="html.parser")
 
-icon_names = soup.find_all('span', {'class': 'icon-name'})
-for icon_name in icon_names:
-    print(icon_name.text)
+icons = soup.find_all('span', {'class': 'icon-name'})
 
-# for icon_name in soup.find_all('span'):
-#     print(icon_name.get('href'))
+for icon in icons:
+    icon_class = icon.text
+    icon_name = re.sub('ti-', '', icon_class)
+    icon_name = re.sub('-', ' ', icon_name)
+    with connection.cursor() as cursor:
+        sql = "INSERT INTO `icons` (`name`, `class`) VALUES (%s, %s)"
+        cursor.execute(sql, (icon_name, icon_class))
+    connection.commit()
 
 # with connection.cursor() as cursor:
 #     # Create a new record
